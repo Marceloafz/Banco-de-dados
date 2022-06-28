@@ -1,0 +1,219 @@
+create database oficina;
+
+USE oficina;
+
+create table empresa(
+
+    idEmpresa int NOT NULL auto_increment primary key,
+    nomeEmpresa varchar(120) NOT NULL,
+    tipo varchar(45)
+    
+    );
+    
+create index idx_idempresa_id on Empresa(idEmpresa);
+    
+create table departamento(
+ 
+  idDepartamento int NOT NULL auto_increment primary key,
+  nomeDepartamento varchar(45) NOT NULL,
+  descricaoDepartamento varchar(100) NOT NULL,
+  idEmpresa int NOT NULL,
+  constraint fk_idEmpresa_departamento foreign key(idEmpresa)
+  references Empresa(idEmpresa)
+  
+  );
+  
+create index idx_iddepartamento_id on Departamento(idDepartamento);
+  
+create table endereco(
+
+  idEndereco int NOT NULL auto_increment primary key,
+  pais varchar(50) NOT NULL,
+  estado varchar(50) NOT NULL,
+  cidade varchar(50) NOT NULL,
+  bairro varchar(50) NOT NULL,
+  rua varchar(100) NOT NULL
+  
+  );
+  
+create index idx_idendereco_id on Endereco(idEndereco);
+  
+create table cliente(
+   
+   idCliente int NOT NULL auto_increment primary key,
+   nomeCliente varchar(120) NOT NULL,
+   cpfCliente varchar(11) NOT NULL,
+   idEndereco int NOT NULL,
+   constraint fk_idEndereco_cliente foreign key(idEndereco)
+   references Endereco(idEndereco)
+   
+   );
+   
+create index idx_idCliente_id on Cliente(idCliente);
+   
+create table funcionario(
+   
+   idFuncionario int NOT NULL auto_increment primary key,
+   nomeFuncionario varchar(120) NOT NULL,
+   cpfFuncionario varchar(11) NOT NULL,
+   idEndereco int NOT NULL,
+   idDepartamento int NOT NULL,
+   constraint fk_idDepartamento_funcionario foreign key(idDepartamento)
+   references Departamento(idDepartamento),
+   constraint fk_idEndereco_funcionario foreign key(idEndereco)
+   references Endereco(idEndereco)
+   
+   );
+   
+create index idx_idfuncionario_id on Funcionario(idFuncionario);
+  
+create table telefone(
+
+  idTelefone int NOT NULL auto_increment primary key,
+  operadora varchar(50) NOT NULL,
+  numero varchar(13) NOT NULL,
+  idFuncionario int,
+  idCliente int,
+  constraint fk_idFuncionario_Telefone foreign key(idFuncionario)
+  references Funcionario(idFuncionario),
+  constraint fk_idCliente_Telefone foreign key(idCliente)
+  references Cliente(idCliente)
+  );
+  
+create index idx_idtelefone_id on Telefone(idTelefone);
+   
+  
+create table OS(
+   
+   idOS int NOT NULL auto_increment primary key,
+   dataSolicitacao varchar(10) NOT NULL,
+   dataPrevisao varchar(10) NOT NULL,
+   resposta varchar(45) NOT NULL,
+   idFuncionario int NOT NULL,
+   idDepartamento int NOT NULL,
+   idCliente int NOT NULL,
+   constraint fk_idFuncionario_OS foreign key(idFuncionario)
+   references Funcionario(idFuncionario),
+   constraint fk_idDepartamento_OS foreign key(idDepartamento)
+   references Departamento(idDepartamento),
+   constraint fk_idCliente_OS foreign key(idCliente)
+   references Cliente(idCliente)
+   
+  
+  );
+  
+create index idx_idOS_id on OS(idOS);
+  
+create table servico(
+   
+   idServico int NOT NULL auto_increment primary key,
+   nomeServico varchar(120) NOT NULL,
+   recursos varchar(200) NOT NULL
+   
+   );
+   
+create index idx_idServico_id on Servico(idServico);
+   
+create table itens_OS(
+
+
+    idOS int NOT NULL,
+    idServico int NOT NULL,
+    constraint fk_idOS_itens foreign key(idOS)
+    references OS(idOS),
+    constraint fk_idServico_itens foreign key(idServico)
+    references Servico(idServico),
+    primary key(idOS, idServico)
+    
+    );
+    
+create index idx_idOS_id on Itens_OS(idOS);
+create index idx_idservico_id on Itens_OS(idServico);
+
+                                     -- Values --
+
+INSERT INTO empresa (idEmpresa, nomeEmpresa, tipo ) values (1, "Zézinho", "id" ); 
+INSERT INTO departamento (nome_servico,recursos) values ("TESTE","Intankavel");
+INSERT INTO endereco (rua, numerocasa) values ("rua augusta","111");
+INSERT INTO endereco (rua, numerocasa) values ("rua Alfedeiro ","113331");
+SELECT 
+    *
+FROM
+    empresa;
+INSERT into departamento (nome_Departamento,descricao_departamento,id_empresa) values ("teste","dsadsadssdasdds","1");
+SELECT 
+    *
+FROM
+    departamento;
+INSERT into cliente (nome_cliente,cpf_cliente,idendereco,idade) values ("Roger","2332313","1",19);
+SELECT 
+    *
+FROM
+    cliente;
+INSERT into funcionario (nome_funcionario,cpf_funcionario,id_departamento,idendereco) values ("pinkman","1323123213","1","2");
+INSERT into os (datasolicitacao,dataprevisao,respostas,id_funcionario,id_departamento,id_cliente) values (20/5,21/5,"sdsadads",1,1,1);
+SELECT 
+    *
+FROM
+    os;
+INSERT into itens_os (idservico,idos) values (1,1);
+INSERT into telefone (numero,ddd,idfuncionario) values (323123321,55,1);
+SELECT 
+    *
+FROM
+    telefone;
+INSERT into telefone (numero,ddd,idcliente) values (323123321,55,1);
+
+INSERT INTO Departamento (nomeDepartamento,descricaoDepartamento,idEmpresa)
+VALUES
+  ("purus. Maecenas","ultrices a, auctor non, feugiat nec,",1),
+  ("risus. Donec","In tincidunt congue",1),
+  ("ad litora","et ultrices posuere cubilia Curae Phasellus",1),
+  ("purus, accumsan","lorem, vehicula et, rutrum eu, ultrices sit amet,",1),
+  ("in consectetuer","dolor elit, pellentesque a,",1),
+  ("magna sed","Duis ac arcu. Nunc mauris. Morbi non sapien",1),
+  ("imperdiet ornare.","et, eros. Proin ultrices. Duis volutpat",1),
+  ("placerat, orci","dolor. Quisque tincidunt pede ac urna. Ut tincidunt",1),
+  ("gravida mauris","vulputate ullamcorper magna. Sed eu eros. Nam",1),
+  ("et risus.","eget varius ultrices, mauris ipsum porta elit, a feugiat",1);
+  
+  INSERT INTO endereco (nomeFuncionario,cpfFuncionario,idDepartamento,idEndereco)
+VALUES
+  ("Dawn Hoover","PAJ77PSM4WD",6,8),
+  ("Paki Cochran","RXV91VLO1VK",8,8),
+  ("Autumn Guerrero","KYT85NYN6KH",3,9),
+  ("Amal Mcgee","KVD22XQY9JY",8,2),
+  ("Clayton Warner","CYN75ECR2UB",7,5),
+  ("Hayden Aguilar","HZI87FDS9MC",6,9),
+  ("Channing Lester","ISC68UBG4PP",10,10),
+  ("Charity Francis","QQW85VKN8XI",6,4),
+  ("Kimberly Frye","TWD28YXO7BN",1,1),
+  ("Amos Fox","WRX00TZS4TT",5,2);
+INSERT INTO endereco (nomeFuncionario,cpfFuncionario,idDepartamento,idEndereco)
+VALUES
+  ("Akeem Mcpherson","ODC26UBO5PI",2,4),
+  ("Julie Ware","HZV68GJC6TX",8,6),
+  ("Sean Cobb","PRL25HRO3IC",5,9),
+  ("Branden Mclean","HZS82CED2EX",6,3),
+  ("Jerome Mckenzie","WQA77WXB7QF",7,10),
+  ("Josiah Lynch","FVX62YOV6IW",3,10),
+  ("Kylee Robles","IYD10JYK7EH",10,5),
+  ("Hiroko Calhoun","OAV13EYH6DL",7,8),
+  ("Castor Key","BJP22RFU4BO",6,5),
+  ("Francis Richards","QPG46GSF5BQ",2,9);
+ 
+ 
+   select s.nomeServico, d.nomeDepartamento, OS from Servico s INNER JOIN ITENS_OS i ON (i.idServico = s.idServico) INNER JOIN OS o ON (o.idOS = i.idOS) INNER JOIN Departamento d ON (d.idDepartamento = o.idDepartamento) and d.idDepartamento = 1;  
+   select s.nomeServico, f.nomeFuncionario from Servico s INNER JOIN ITENS_OS i ON (i.idServico = s.idServico) INNER JOIN OS o ON (o.idOS = i.idOS) INNER JOIN Funcionario f ON (f.idFuncionario = o.idFuncionario);  
+   select s.nomeServico, c.nomeCliente from Servico s INNER JOIN ITENS_OS i ON (i.idServico = s.idServico) INNER JOIN OS o ON (o.idOS = i.idOS) INNER JOIN Cliente c ON (c.idCliente = o.idCliente);
+   
+   select
+   max(order_credit)
+   from customer 
+   where last_name = "lynch";
+   
+   select
+   min(order_credit)
+   from customer
+   where nome = "Sean";
+   
